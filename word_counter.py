@@ -1,6 +1,7 @@
 from collections import defaultdict
 from matplotlib import pyplot as plt
 import re
+import PyPDF2
 
 
 def textPreprocessing(file):
@@ -26,12 +27,35 @@ def textPreprocessing(file):
     if file[-4:] not in supported_formats:
         return "format not supported"
     else:
-        # proceed to opening file
+        # proceed to opening txt file
         if file[-4:] == ".txt":
             try:
                 with open(file, "r") as inFile:
                     # read the entire text into a string
                     fileText = inFile.read()
+            except IOError:
+                message = f"Sorry, the file {file} cannot be opened. Please check it exists in your directory."
+
+                return message
+
+        # try to open PDF file
+        elif file[-4:] == ".pdf":
+            try:
+                with open(file, "rb") as pdfFile:
+                    # create pdfReader object
+                    pdfReader = PyPDF2.PdfFileReader(pdfFile)
+
+                    # get total number of pages
+                    totalPages = pdfReader.numPages
+
+                    # extract text from all pdf pages
+                    for page in range(totalPages):
+                        # create page page object
+                        pdfPage = pdfReader.getPage(page)
+
+                        # append extracted text to fileText string
+                        fileText = fileText + " " + pdfPage.extractText()
+
             except IOError:
                 message = f"Sorry, the file {file} cannot be opened. Please check it exists in your directory."
 
@@ -93,6 +117,9 @@ def generate_histogram(text_count_dict):
     # label each tick
     plt.xticks(range(len(words)), words)
 
+    # rotate labels for better readability
+    plt.xticks(rotation=45)
+
     # display the plot
     plt.show()
 
@@ -123,4 +150,4 @@ if __name__ == '__main__':
     #
     # generate_histogram(count_results)
 
-    word_counter("test1.txt")
+    word_counter("testPDF.pdf")
