@@ -1,5 +1,6 @@
 from collections import defaultdict
 from matplotlib import pyplot as plt
+import re
 
 
 def textPreprocessing(file):
@@ -27,13 +28,18 @@ def textPreprocessing(file):
     else:
         # proceed to opening file
         if file[-4:] == ".txt":
-            with open(file, "r") as inFile:
-                # read the entire text into a string
-                fileText = inFile.read()
+            try:
+                with open(file, "r") as inFile:
+                    # read the entire text into a string
+                    fileText = inFile.read()
+            except IOError:
+                message = f"Sorry, the file {file} cannot be opened. Please check it exists in your directory."
 
-        # remove all punctuation
-        for element in removeList:
-            fileText.replace(element, "")
+                return message
+
+        # removing all punctuation using regex
+        # https://stackoverflow.com/questions/265960/best-way-to-strip-punctuation-from-a-string
+        fileText = re.sub(r'[^\w\s]', '', fileText)
 
         # make lowercase
         fileText = fileText.lower()
@@ -53,9 +59,8 @@ def textPreprocessing(file):
 
 
 def count_words(sorted_text_list):
-
     # create dictionary with first entry
-    text_count = defaultdict(int) #{sorted_text_list[0]: 1}
+    text_count = defaultdict(int)  # {sorted_text_list[0]: 1}
 
     # offset by one so that loop does not go out of bound
     # for index in range(len(sorted_text_list) - 1):
@@ -95,9 +100,16 @@ def generate_histogram(text_count_dict):
 def word_counter(file):
     preprocessing = textPreprocessing(file)
 
-    count_dict = count_words(preprocessing)
+    # checking to see preprocessing properly opened file
+    # error occurred if textPreprocessing() returns a string
+    if type(preprocessing) == type('str'):
+        print(preprocessing)
 
-    generate_histogram(count_dict)
+    # preprocessing successful if a sorted list is returned
+    else:
+        count_dict = count_words(preprocessing)
+
+        generate_histogram(count_dict)
 
 
 if __name__ == '__main__':
