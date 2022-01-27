@@ -2,13 +2,14 @@ from collections import defaultdict
 from matplotlib import pyplot as plt
 import re
 import PyPDF2
+from bs4 import BeautifulSoup
 
 
 def textPreprocessing(file):
     fileText = ""
     textList = []
     finalTextList = []
-    supported_formats = [".txt", ".pdf"]
+    supported_formats = [".txt", ".pdf", ".html"]
     removeList = ["\n", ".", "?", "!", ";", ":", ";", ","]
 
     # set of words to filter out
@@ -24,9 +25,7 @@ def textPreprocessing(file):
             "too", "very", "s", "t", "can", "will", "just", "don", "should", "now"]
 
     # checking if file format supported
-    if file[-4:] not in supported_formats:
-        return "format not supported"
-    else:
+    if file[-4:] or file[-5:] in supported_formats:
         # proceed to opening txt file
         if file[-4:] == ".txt":
             try:
@@ -61,7 +60,28 @@ def textPreprocessing(file):
 
                 return message
 
-        # removing all punctuation using regex
+        # parsing html: https://www.geeksforgeeks.org/how-to-parse-local-html-file-in-python/
+        # try to open HTML file
+        elif file[-5:] == ".html":
+            try:
+                # opening the html file
+                with open(file, "r") as htmlFile:
+
+                    # read the html file
+                    htmlContents = htmlFile.read()
+
+                    # create BeautifulSoup object with specific parser
+                    parserObj = BeautifulSoup(htmlContents, 'html.parser')
+
+                    # extract text from html
+                    fileText = parserObj.get_text()
+
+            except IOError:
+                message = f"Sorry, the file {file} cannot be opened. Please check it exists in your directory."
+
+                return message
+
+        # removing all punctuation using regex:
         # https://stackoverflow.com/questions/265960/best-way-to-strip-punctuation-from-a-string
         fileText = re.sub(r'[^\w\s]', '', fileText)
 
@@ -72,6 +92,9 @@ def textPreprocessing(file):
         # possible issue to solve in future is compound words separated with space
         textList = fileText.split()
 
+        # remove before submission
+        print(textList)
+
         # remove all nltk words from text
         for word in textList:
             if word not in nltk:
@@ -80,6 +103,10 @@ def textPreprocessing(file):
         finalTextList.sort()
 
         return finalTextList
+    else:
+        return "format not supported"
+
+
 
 
 def count_words(sorted_text_list):
@@ -95,7 +122,8 @@ def count_words(sorted_text_list):
     #     else:
     #         text_count[neighbor] = 1
 
-    # idea for defaultdict comes from https://www.humaneer.org/blog/how-to-plot-a-histogram-using-python-matplotlib/
+    # idea for defaultdict comes from:
+    # https://www.humaneer.org/blog/how-to-plot-a-histogram-using-python-matplotlib/
     for word in sorted_text_list:
         text_count[word] += 1
 
@@ -150,4 +178,4 @@ if __name__ == '__main__':
     #
     # generate_histogram(count_results)
 
-    word_counter("testPDF.pdf")
+    word_counter("testPDF2pages.pdf")
