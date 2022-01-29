@@ -5,6 +5,34 @@ import PyPDF2
 from bs4 import BeautifulSoup
 
 
+# returns file type as string else it returns "invalidFileName"
+def getFileFormat(file):
+
+    print("Determining file type.")
+
+    # checking if the argument passed is a string
+    if isinstance(file, str):
+
+        # tokenize the file string into file name and type
+        fileName = file.split(".")
+
+        # split returns list with only one element if delimiter not present in string
+        if len(fileName) > 1:
+
+            print(f"User passed {file} as file name.")
+
+            # extract the file type
+            fileType = fileName[1]
+
+            print(f"The file extension is: {fileType}")
+            return fileType
+
+        else:
+            print(f"\"{file}\" is not a valid file name")
+            return "invalidFileName"
+
+
+
 def textPreprocessing(file):
     fileText = ""
     textList = []
@@ -25,9 +53,11 @@ def textPreprocessing(file):
             "too", "very", "s", "t", "can", "will", "just", "don", "should", "now"]
 
     # checking if file format supported
-    if file[-4:] or file[-5:] in supported_formats:
+    fileType = getFileFormat()
+    
+    if fileType in supported_formats:
         # proceed to opening txt file
-        if file[-4:] == ".txt":
+        if fileType == ".txt":
             try:
                 with open(file, "r") as inFile:
                     # read the entire text into a string
@@ -104,7 +134,7 @@ def textPreprocessing(file):
 
         return finalTextList
     else:
-        return "format not supported"
+        return "File format not supported"
 
 
 
@@ -168,6 +198,7 @@ def word_counter(file):
 
 
 if __name__ == '__main__':
+
     # result = textPreprocessing("test1.txt")
     #
     # print(result)
@@ -178,4 +209,8 @@ if __name__ == '__main__':
     #
     # generate_histogram(count_results)
 
-    word_counter("testPDF2pages.pdf")
+    # word_counter("testPDF2pages.pdf")
+
+    fileType = getFileFormat("filetxt")
+
+    print(fileType)
