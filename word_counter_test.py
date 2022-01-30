@@ -10,3 +10,12 @@ def test_short_txt() -> None:
 
     assert countingResult == expectedResult
 
+def test_empty_file_txt() -> None:
+    """Testing txt file that is empty"""
+
+    countingResult = word_counter("emptyText.txt")
+
+    expectedResult = {}
+
+    assert countingResult == expectedResult
+
