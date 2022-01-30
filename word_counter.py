@@ -292,7 +292,8 @@ if __name__ == '__main__':
     # generate_histogram(count_results)
 
     # test txt file
-    word_counter("test1.txt")
+    # word_counter("test1.txt")
+    word_counter("all_nltk_text.txt")
 
     # test pdf files
     # word_counter("testPDF.pdf")

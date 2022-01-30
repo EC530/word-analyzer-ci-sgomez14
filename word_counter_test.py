@@ -19,3 +19,11 @@ def test_empty_file_txt() -> None:
 
     assert countingResult == expectedResult
 
+def test_file_with_only_nltk_txt() -> None:
+    """Testing txt file that only has nltk words"""
+
+    countingResult = word_counter("all_nltk_text.txt")
+
+    expectedResult = {}
+
+    assert countingResult == expectedResult
