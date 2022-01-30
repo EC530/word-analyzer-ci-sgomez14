@@ -253,7 +253,7 @@ def generate_histogram(text_count_dict):
     plt.figure(figsize=(100, 100))
 
     # display the plot
-    plt.show()
+    # plt.show()
 
 
 def word_counter(file) -> dict:
