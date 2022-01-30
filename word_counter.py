@@ -2,7 +2,7 @@ from collections import defaultdict
 from matplotlib import pyplot as plt
 import re
 # import PyPDF2
-import fitz
+# import fitz
 from bs4 import BeautifulSoup
 
 
