@@ -2,7 +2,7 @@ from collections import defaultdict
 from matplotlib import pyplot as plt
 import re
 # import PyPDF2
-# import fitz
+import fitz
 from bs4 import BeautifulSoup
 
 
@@ -87,16 +87,16 @@ def processPDFFile(file):
         #     return fileText, openResult
 
         # fitz version
-        # pdfDocObj = fitz.Document(file)
-        #
-        # for page in pdfDocObj:
-        #
-        #     fileText = fileText + " " + page.get_text("text")
-        #
-        # # opening file successful
-        # openResult = True
-        #
-        # return fileText, openResult
+        pdfDocObj = fitz.Document(file)
+
+        for page in pdfDocObj:
+
+            fileText = fileText + " " + page.get_text("text")
+
+        # opening file successful
+        openResult = True
+
+        return fileText, openResult
 
     except IOError:
         message = f"Sorry, the file {file} cannot be opened. Please check it exists in your directory."
