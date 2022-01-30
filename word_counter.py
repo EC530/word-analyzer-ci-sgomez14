@@ -64,6 +64,7 @@ def processPDFFile(file):
     fileText = ""
 
     try:
+        print("placeholder for pdf parsing")
         # PyPDF2 version: commenting out since testing showed it has text parsing errors
         # with open(file, "rb") as pdfFile:
         #     # create pdfReader object
@@ -86,16 +87,16 @@ def processPDFFile(file):
         #     return fileText, openResult
 
         # fitz version
-        pdfDocObj = fitz.Document(file)
-
-        for page in pdfDocObj:
-
-            fileText = fileText + " " + page.get_text("text")
-
-        # opening file successful
-        openResult = True
-
-        return fileText, openResult
+        # pdfDocObj = fitz.Document(file)
+        #
+        # for page in pdfDocObj:
+        #
+        #     fileText = fileText + " " + page.get_text("text")
+        #
+        # # opening file successful
+        # openResult = True
+        #
+        # return fileText, openResult
 
     except IOError:
         message = f"Sorry, the file {file} cannot be opened. Please check it exists in your directory."
