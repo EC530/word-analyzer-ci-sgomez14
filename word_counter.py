@@ -1,7 +1,7 @@
 from collections import defaultdict
 from matplotlib import pyplot as plt
 import re
-import PyPDF2
+# import PyPDF2
 import fitz
 from bs4 import BeautifulSoup
 
@@ -64,6 +64,7 @@ def processPDFFile(file):
     fileText = ""
 
     try:
+        # PyPDF2 version: commenting out since testing showed it has text parsing errors
         # with open(file, "rb") as pdfFile:
         #     # create pdfReader object
         #     pdfReader = PyPDF2.PdfFileReader(pdfFile)
@@ -84,6 +85,7 @@ def processPDFFile(file):
         #
         #     return fileText, openResult
 
+        # fitz version
         pdfDocObj = fitz.Document(file)
 
         for page in pdfDocObj:
@@ -229,6 +231,8 @@ def count_words(sorted_text_list):
 
 
 def generate_histogram(text_count_dict):
+
+    print("Creating Histogram.")
     words = text_count_dict.keys()
     counts = text_count_dict.values()
 
@@ -255,7 +259,7 @@ def generate_histogram(text_count_dict):
 def word_counter(file):
 
     # if preprocessing is successful then a sorted list is returned
-    # otherwise a string message is returned
+    # otherwise a string message is returned along with a boolean that is false
     preprocessingContents, preprocessingResult = textPreprocessing(file)
 
     if preprocessingResult:
@@ -267,7 +271,10 @@ def word_counter(file):
         # pass dictionary to get histogram
         generate_histogram(count_dict)
 
+        return count_dict
+
     else:
+        # prints processing error
         print(preprocessingContents)
 
 
