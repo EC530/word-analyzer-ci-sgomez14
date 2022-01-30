@@ -1,4 +1,3 @@
-import pytest
 from word_counter import word_counter
 
 
