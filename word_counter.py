@@ -256,10 +256,10 @@ def generate_histogram(text_count_dict):
     plt.show()
 
 
-def word_counter(file):
+def word_counter(file) -> dict:
 
-    # if preprocessing is successful then a sorted list is returned
-    # otherwise a string message is returned along with a boolean that is false
+    """if preprocessing is successful then a sorted list is returned,
+    otherwise a string message is returned along with a boolean that is false"""
     preprocessingContents, preprocessingResult = textPreprocessing(file)
 
     if preprocessingResult:
@@ -291,11 +291,11 @@ if __name__ == '__main__':
     # generate_histogram(count_results)
 
     # test txt file
-    # word_counter("test1.txt")
+    word_counter("test1.txt")
 
     # test pdf files
     # word_counter("testPDF.pdf")
-    word_counter("testPDF2pages.pdf")
+    # word_counter("testPDF2pages.pdf")
 
     # test html files
     # word_counter("htmlTest.html")
