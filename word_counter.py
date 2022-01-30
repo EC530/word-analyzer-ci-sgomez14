@@ -2,6 +2,7 @@ from collections import defaultdict
 from matplotlib import pyplot as plt
 import re
 import PyPDF2
+import fitz
 from bs4 import BeautifulSoup
 
 
@@ -19,7 +20,7 @@ def getFileFormat(file):
         # split returns list with only one element if delimiter not present in string
         if len(fileName) > 1:
 
-            print(f"User passed {file} as file name.")
+            print(f"User passed \"{file}\" as file name.")
 
             # extract the file type
             fileType = fileName[1]
@@ -32,12 +33,134 @@ def getFileFormat(file):
             return "invalidFileName"
 
 
+# returns contents of txt file in a string and True to indicate file opened successfully,
+# else it returns message and False to indicate that file could not be opened
+def processTextFile(file):
+
+    print("\nProcessing txt file.")
+
+    try:
+        with open(file, "r") as inFile:
+            # read the entire text into a string
+            fileText = inFile.read()
+
+            # opening file successful
+            openResult = True
+
+            return fileText, openResult
+
+    except IOError:
+        message = f"Error:Sorry, the file {file} cannot be opened. Please check it exists in your directory."
+        openResult = False
+        print(message)
+
+        return message, openResult
+
+
+def processPDFFile(file):
+
+    print("\nProcessing PDF file.")
+
+    fileText = ""
+
+    try:
+        # with open(file, "rb") as pdfFile:
+        #     # create pdfReader object
+        #     pdfReader = PyPDF2.PdfFileReader(pdfFile)
+        #
+        #     # get total number of pages
+        #     totalPages = pdfReader.numPages
+        #
+        #     # extract text from all pdf pages
+        #     for page in range(totalPages):
+        #         # create page page object
+        #         pdfPage = pdfReader.getPage(page)
+        #
+        #         # append extracted text to fileText string
+        #         fileText = fileText + " " + pdfPage.extractText()
+        #
+        #     # opening file successful
+        #     openResult = True
+        #
+        #     return fileText, openResult
+
+        pdfDocObj = fitz.Document(file)
+
+        for page in pdfDocObj:
+
+            fileText = fileText + " " + page.get_text("text")
+
+        # opening file successful
+        openResult = True
+
+        return fileText, openResult
+
+    except IOError:
+        message = f"Sorry, the file {file} cannot be opened. Please check it exists in your directory."
+        openResult = False
+        print(message)
+
+        return message, openResult
+
+
+def processHTMLFile(file):
+
+    # parsing html: https://www.geeksforgeeks.org/how-to-parse-local-html-file-in-python/
+    # try to open HTML file
+    try:
+        # opening the html file
+        with open(file, "r") as htmlFile:
+
+            # read the html file
+            htmlContents = htmlFile.read()
+
+            # create BeautifulSoup object with specific parser
+            parserObj = BeautifulSoup(htmlContents, 'html.parser')
+
+            # extract text from html
+            fileText = parserObj.get_text()
+
+            # opening file successful
+            openResult = True
+
+            return fileText, openResult
+
+    except IOError:
+        message = f"Sorry, the file {file} cannot be opened. Please check it exists in your directory."
+        openResult = False
+        print(message)
+
+        return message, openResult
+
+
+# returns the contents of file in string and true to indicate opening was successful
+# otherwise returns string with warning message and false to indicate that opening was not successful
+def openSupportedFormat(file, filetype):
+
+    if filetype == "txt":
+
+        fileContents, openResult = processTextFile(file)
+
+    elif filetype == "pdf":
+
+        fileContents, openResult = processPDFFile(file)
+
+    elif filetype == "html":
+
+        fileContents, openResult = processHTMLFile(file)
+
+    else:
+        fileContents = "File format not supported"
+        openResult = False
+
+    return fileContents, openResult
+
 
 def textPreprocessing(file):
     fileText = ""
     textList = []
     finalTextList = []
-    supported_formats = [".txt", ".pdf", ".html"]
+    supported_formats = ["txt", "pdf", "html"]
     removeList = ["\n", ".", "?", "!", ";", ":", ";", ","]
 
     # set of words to filter out
@@ -53,104 +176,49 @@ def textPreprocessing(file):
             "too", "very", "s", "t", "can", "will", "just", "don", "should", "now"]
 
     # checking if file format supported
-    fileType = getFileFormat()
-    
+    fileType = getFileFormat(file)
+
     if fileType in supported_formats:
-        # proceed to opening txt file
-        if fileType == ".txt":
-            try:
-                with open(file, "r") as inFile:
-                    # read the entire text into a string
-                    fileText = inFile.read()
-            except IOError:
-                message = f"Sorry, the file {file} cannot be opened. Please check it exists in your directory."
 
-                return message
+        fileText, openResult = openSupportedFormat(file, fileType)
 
-        # try to open PDF file
-        elif file[-4:] == ".pdf":
-            try:
-                with open(file, "rb") as pdfFile:
-                    # create pdfReader object
-                    pdfReader = PyPDF2.PdfFileReader(pdfFile)
+        if openResult:
 
-                    # get total number of pages
-                    totalPages = pdfReader.numPages
+            # removing all punctuation using regex:
+            # https://stackoverflow.com/questions/265960/best-way-to-strip-punctuation-from-a-string
+            fileText = re.sub(r'[^\w\s]', '', fileText)
 
-                    # extract text from all pdf pages
-                    for page in range(totalPages):
-                        # create page page object
-                        pdfPage = pdfReader.getPage(page)
+            # make lowercase
+            fileText = fileText.lower()
 
-                        # append extracted text to fileText string
-                        fileText = fileText + " " + pdfPage.extractText()
+            # split string into list
+            # possible issue to solve in future is compound words separated with space
+            textList = fileText.split()
 
-            except IOError:
-                message = f"Sorry, the file {file} cannot be opened. Please check it exists in your directory."
+            # remove before submission
+            print(textList)
 
-                return message
+            # remove all nltk words from text
+            for word in textList:
+                if word not in nltk:
+                    finalTextList.append(word)
 
-        # parsing html: https://www.geeksforgeeks.org/how-to-parse-local-html-file-in-python/
-        # try to open HTML file
-        elif file[-5:] == ".html":
-            try:
-                # opening the html file
-                with open(file, "r") as htmlFile:
+            # sort words in ascending order
+            finalTextList.sort()
 
-                    # read the html file
-                    htmlContents = htmlFile.read()
+            # preprocessing successful
+            preprocessingResult = True
 
-                    # create BeautifulSoup object with specific parser
-                    parserObj = BeautifulSoup(htmlContents, 'html.parser')
-
-                    # extract text from html
-                    fileText = parserObj.get_text()
-
-            except IOError:
-                message = f"Sorry, the file {file} cannot be opened. Please check it exists in your directory."
-
-                return message
-
-        # removing all punctuation using regex:
-        # https://stackoverflow.com/questions/265960/best-way-to-strip-punctuation-from-a-string
-        fileText = re.sub(r'[^\w\s]', '', fileText)
-
-        # make lowercase
-        fileText = fileText.lower()
-
-        # split string into list
-        # possible issue to solve in future is compound words separated with space
-        textList = fileText.split()
-
-        # remove before submission
-        print(textList)
-
-        # remove all nltk words from text
-        for word in textList:
-            if word not in nltk:
-                finalTextList.append(word)
-
-        finalTextList.sort()
-
-        return finalTextList
+            return finalTextList, preprocessingResult
     else:
-        return "File format not supported"
-
-
+        message = "File format not supported"
+        preprocessingResult = False
+        return message, preprocessingResult
 
 
 def count_words(sorted_text_list):
-    # create dictionary with first entry
-    text_count = defaultdict(int)  # {sorted_text_list[0]: 1}
-
-    # offset by one so that loop does not go out of bound
-    # for index in range(len(sorted_text_list) - 1):
-    #     currentWord = sorted_text_list[index]
-    #     neighbor = sorted_text_list[index + 1]
-    #     if currentWord == neighbor:
-    #         text_count[currentWord] += 1
-    #     else:
-    #         text_count[neighbor] = 1
+    # create dictionary with defaultdict collection type. (int) to indicate that values will be integers
+    text_count = defaultdict(int)
 
     # idea for defaultdict comes from:
     # https://www.humaneer.org/blog/how-to-plot-a-histogram-using-python-matplotlib/
@@ -176,25 +244,31 @@ def generate_histogram(text_count_dict):
     plt.xticks(range(len(words)), words)
 
     # rotate labels for better readability
-    plt.xticks(rotation=45)
+    plt.xticks(rotation=15)
+
+    plt.figure(figsize=(100, 100))
 
     # display the plot
     plt.show()
 
 
 def word_counter(file):
-    preprocessing = textPreprocessing(file)
 
-    # checking to see preprocessing properly opened file
-    # error occurred if textPreprocessing() returns a string
-    if type(preprocessing) == type('str'):
-        print(preprocessing)
+    # if preprocessing is successful then a sorted list is returned
+    # otherwise a string message is returned
+    preprocessingContents, preprocessingResult = textPreprocessing(file)
 
-    # preprocessing successful if a sorted list is returned
-    else:
-        count_dict = count_words(preprocessing)
+    if preprocessingResult:
 
+        # pass sorted list to count_words function
+        # expecting a dictionary where the words are the keys and the values are the count of that word
+        count_dict = count_words(preprocessingContents)
+
+        # pass dictionary to get histogram
         generate_histogram(count_dict)
+
+    else:
+        print(preprocessingContents)
 
 
 if __name__ == '__main__':
@@ -209,8 +283,16 @@ if __name__ == '__main__':
     #
     # generate_histogram(count_results)
 
-    # word_counter("testPDF2pages.pdf")
+    # test txt file
+    # word_counter("test1.txt")
 
-    fileType = getFileFormat("filetxt")
+    # test pdf files
+    # word_counter("testPDF.pdf")
+    word_counter("testPDF2pages.pdf")
 
-    print(fileType)
+    # test html files
+    # word_counter("htmlTest.html")
+
+    # fileType = getFileFormat("filetxt")
+    #
+    # print(fileType)
