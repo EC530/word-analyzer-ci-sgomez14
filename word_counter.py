@@ -33,9 +33,9 @@ def getFileFormat(file):
             return "invalidFileName"
 
 
-# returns contents of txt file in a string and True to indicate file opened successfully,
-# else it returns message and False to indicate that file could not be opened
 def processTextFile(file):
+    """returns contents of txt file in a string and True to indicate file opened successfully,
+    else it returns message and False to indicate that file could not be opened"""
 
     print("\nProcessing txt file.")
 
@@ -251,16 +251,17 @@ def generate_histogram(text_count_dict):
     # rotate labels for better readability
     plt.xticks(rotation=15)
 
-    plt.figure(figsize=(100, 100))
+    # having issues with generating larger image for histrogram
+    # plt.figure(figsize=(100, 100))
 
     # display the plot
     plt.show()
 
 
-def word_counter(file) -> dict:
-
+def word_counter(file, display_histogram=False) -> dict:
     """if preprocessing is successful then a sorted list is returned,
     otherwise a string message is returned along with a boolean that is false"""
+
     preprocessingContents, preprocessingResult = textPreprocessing(file)
 
     if preprocessingResult:
@@ -269,8 +270,12 @@ def word_counter(file) -> dict:
         # expecting a dictionary where the words are the keys and the values are the count of that word
         count_dict = count_words(preprocessingContents)
 
-        # pass dictionary to get histogram
-        generate_histogram(count_dict)
+        print(count_dict)
+
+        """User option to display histogram"""
+        if display_histogram:
+            # pass dictionary to get histogram
+            generate_histogram(count_dict)
 
         return count_dict
 
@@ -293,7 +298,9 @@ if __name__ == '__main__':
 
     # test txt file
     # word_counter("test1.txt")
-    word_counter("all_nltk_text.txt")
+    # word_counter("all_nltk_text.txt")
+    # word_counter("only_nums_text.txt")
+    word_counter("iso_text.txt", True)
 
     # test pdf files
     # word_counter("testPDF.pdf")
