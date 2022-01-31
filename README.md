@@ -53,6 +53,7 @@ Figure 2: Module Architecture v1 for Word Counter
    the intent of numbers in a text.
  - Foreign words are counted in the text, since it is possible that the author of the text wanted 
    to inject foreign words.
+ - PDF support expected in Version 1.1, date release TBD
  
 
 
