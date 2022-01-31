@@ -11275,3 +11275,4 @@ venv/Lib/site-packages/__pycache__/configparser.cpython-39.pyc
 venv/Lib/site-packages/.DS_Store
 __pycache__/word_counter.cpython-39.pyc
 __pycache__/word_counter_test.cpython-39-pytest-6.2.5.pyc
+test_files/__pycache__/word_counter_test.cpython-39-pytest-6.2.5.pyc
