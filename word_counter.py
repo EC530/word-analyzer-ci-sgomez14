@@ -283,24 +283,19 @@ def word_counter(file, display_histogram=False) -> dict:
         # prints processing error
         print(preprocessingContents)
 
+        emptyDictionary = {}
+
+        return emptyDictionary
+
 
 if __name__ == '__main__':
-
-    # result = textPreprocessing("test1.txt")
-    #
-    # print(result)
-    #
-    # count_results = count_words(result)
-    #
-    # print(count_results)
-    #
-    # generate_histogram(count_results)
 
     # test txt file
     # word_counter("test1.txt")
     # word_counter("all_nltk_text.txt")
     # word_counter("only_nums_text.txt")
-    word_counter("iso_text.txt", True)
+    # word_counter("iso_text.txt", True)
+    word_counter("filetxt")
 
     # test pdf files
     # word_counter("testPDF.pdf")
