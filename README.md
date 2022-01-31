@@ -24,6 +24,29 @@ from word_counter import word_counter
 Then you can utilize word_counter() anywhere in your application.
 
 
+## Sample Results
+
+The histogram displays each other in ascending order along the x-axis and the number of occerences along the y-axis.
+
+![Sample Results 1](sample_results/sample_results1.png)
+
+Figure 1: Sample Histogram 1
+
+
+## Module Architecture
+
+The flowchart below outlines the structure of the Word Counter module.
+
+![Module Architecture](architecture/architecture_v1.png)
+
+Figure 2: Module Architecture v1 for Word Counter
+
+
+## Release Notes
+
+### Version 1.0
+
+
 
 
 
