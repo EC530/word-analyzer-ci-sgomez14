@@ -171,3 +171,28 @@ def test_longer_text_html() -> None:
 
     assert countingResult == expectedResult
 
+
+# PDF tests start here
+# will activate once PDF dependency issues are resolved
+
+# def test_simple_file_pdf() -> None:
+#     """Testing simple pdf file"""
+#
+#     countingResult = word_counter(test_files + "testPDF.pdf")
+#
+#     expectedResult = {"hello": 1, "lamb": 2, "little": 2, "mary": 1}
+#
+#     assert countingResult == expectedResult
+#
+#
+# def test_two_page_pdf() -> None:
+#     """Testing 2-page PDF file"""
+#
+#     countingResult = word_counter(test_files + "testPDF.pdf")
+#
+#     # edit expected results to account for content on second page
+#     expectedResult = {"hello": 1, "lamb": 2, "little": 2, "mary": 1}
+#
+#     assert countingResult == expectedResult
+
+

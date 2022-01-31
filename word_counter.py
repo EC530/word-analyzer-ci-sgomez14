@@ -296,20 +296,5 @@ def word_counter(file, display_histogram=False) -> dict:
 
 if __name__ == '__main__':
 
-    # test txt file
-    # word_counter("test1.txt")
-    # word_counter("all_nltk_text.txt")
-    # word_counter("only_nums_text.txt")
-    # word_counter("iso_text.txt", True)
-    word_counter("filetxt.txt")
-
-    # test pdf files
-    # word_counter("testPDF.pdf")
-    # word_counter("testPDF2pages.pdf")
-
-    # test html files
-    # word_counter("htmlTest.html")
-
-    # fileType = getFileFormat("filetxt")
-    #
-    # print(fileType)
+    # Sample call of word_counter()
+    word_counter("test1.txt")
