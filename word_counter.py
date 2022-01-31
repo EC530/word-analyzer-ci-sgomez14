@@ -213,6 +213,12 @@ def textPreprocessing(file):
             preprocessingResult = True
 
             return finalTextList, preprocessingResult
+
+        else:
+            message = fileText
+            preprocessingResult = False
+            return message, preprocessingResult
+
     else:
         message = "File format not supported"
         preprocessingResult = False
@@ -295,7 +301,7 @@ if __name__ == '__main__':
     # word_counter("all_nltk_text.txt")
     # word_counter("only_nums_text.txt")
     # word_counter("iso_text.txt", True)
-    word_counter("filetxt")
+    word_counter("filetxt.txt")
 
     # test pdf files
     # word_counter("testPDF.pdf")
