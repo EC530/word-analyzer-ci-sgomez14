@@ -46,6 +46,15 @@ Figure 2: Module Architecture v1 for Word Counter
 
 ### Version 1.0
 
+ - This version strips away all punctuation, including apostrophes in words.
+ - Currently, not detecting compounds words separated by space. Space-separated words are broken
+   into their constituent components
+ - Numbers are considered for in the word count. Different technology would be needed to analzye
+   the intent of numbers in a text.
+ - Foreign words are counted in the text, since it is possible that the author of the text wanted 
+   to inject foreign words.
+ 
+
 
 
 
