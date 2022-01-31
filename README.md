@@ -26,7 +26,7 @@ Then you can utilize word_counter() anywhere in your application.
 
 ## Sample Results
 
-The histogram displays each other in ascending order along the x-axis and the number of occerences along the y-axis.
+The histogram displays each word in ascending order along the x-axis and the number of occerences along the y-axis.
 
 ![Sample Results 1](sample_results/sample_results1.png)
 

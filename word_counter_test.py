@@ -3,6 +3,28 @@ from word_counter import word_counter
 test_files = "test_files/"
 
 
+# General tests for all supported formats
+
+def test_invalid_filename() -> None:
+    """Testing function by passing invalid file name"""
+
+    countingResult = word_counter("invalidFile")
+
+    expectedResult = {}
+
+    assert countingResult == expectedResult
+
+
+def test_unsupported_format() -> None:
+    """Testing function by passing invalid file name"""
+
+    countingResult = word_counter("Mary.docx")
+
+    expectedResult = {}
+
+    assert countingResult == expectedResult
+
+
 # Txt tests start here
 
 def test_short_txt() -> None:
